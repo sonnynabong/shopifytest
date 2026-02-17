@@ -303,8 +303,8 @@ body {
   margin-top: 40px;
 }
 
-/* Tablet styles (768px - 1023px) - Show 2 products */
-@media (min-width: 768px) and (max-width: 1023px) {
+/* Tablet styles (600px - 1199px) - Show 2 products */
+@media (min-width: 600px) and (max-width: 1199px) {
   .comparison-section {
     padding: 60px 0;
   }
@@ -494,7 +494,7 @@ body {
 }
 
 /* Hide mobile nav on desktop only (not tablet) */
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
   .mobile-nav {
     display: none;
   }

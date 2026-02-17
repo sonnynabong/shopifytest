@@ -132,8 +132,8 @@
 
             function getSlidesPerView() {
                 const width = window.innerWidth;
-                if (width >= 1024) return 3; // Desktop: 3 products
-                if (width >= 768) return 2;  // Tablet: 2 products
+                if (width >= 1200) return 3; // Desktop: 3 products
+                if (width >= 600) return 2;  // Tablet: 2 products
                 return 1;                     // Mobile: 1 product
             }
 
@@ -149,7 +149,7 @@
                 const slidesPerView = getSlidesPerView();
                 
                 // Desktop: no slider
-                if (width >= 1024) {
+                if (width >= 1200) {
                     wrapper.style.transform = '';
                     wrapper.style.transition = '';
                     return;
@@ -190,7 +190,7 @@
             }, { passive: true });
 
             wrapper.addEventListener('touchend', (e) => {
-                if (window.innerWidth >= 1024) return;
+                if (window.innerWidth >= 1200) return;
                 
                 const diff = touchStartX - e.changedTouches[0].screenX;
                 const totalSlides = getTotalSlides();
@@ -210,7 +210,7 @@
             window.addEventListener('resize', () => {
                 // Reset index when switching between breakpoints
                 const width = window.innerWidth;
-                if (width >= 1024) {
+                if (width >= 1200) {
                     currentIndex = 0;
                 }
                 updateSlider();
