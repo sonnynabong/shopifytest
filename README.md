@@ -2,6 +2,12 @@
 
 A pixel-perfect recreation of the "How Q-Rejuvalight compares" section from qureskincare.com as a Shopify section.
 
+Tools Used
+
+1. Cursor
+2. OpenCode
+3. Kimi K2.5
+
 ## 📁 Files to Upload
 
 ```
