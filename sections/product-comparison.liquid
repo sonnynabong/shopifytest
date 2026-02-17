@@ -5,10 +5,10 @@
 {% endcomment %}
 
 <style>
-  /* Font Imports - Loaded from Shopify CDN */
+  /* Font Imports - Loaded from theme assets */
   @font-face {
     font-family: 'Canela';
-    src: url('https://cdn.shopify.com/s/files/1/0441/1431/3365/t/94/assets/Canela-Light.woff2') format('woff2');
+    src: url({{ 'Canela-Light.woff2' | asset_url }}) format('woff2');
     font-weight: 300;
     font-style: normal;
     font-display: swap;
@@ -16,7 +16,7 @@
 
   @font-face {
     font-family: 'Canela';
-    src: url('https://cdn.shopify.com/s/files/1/0441/1431/3365/t/94/assets/Canela-Regular.woff2') format('woff2');
+    src: url({{ 'Canela-Regular.woff2' | asset_url }}) format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -24,7 +24,7 @@
 
   @font-face {
     font-family: 'Canela';
-    src: url('https://cdn.shopify.com/s/files/1/0441/1431/3365/t/94/assets/Canela-Medium.woff2') format('woff2');
+    src: url({{ 'Canela-Medium.woff2' | asset_url }}) format('woff2');
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -32,7 +32,7 @@
 
   @font-face {
     font-family: 'TT Commons';
-    src: url('https://cdn.shopify.com/s/files/1/0441/1431/3365/t/94/assets/TTCommons-Regular.woff2') format('woff2');
+    src: url({{ 'TTCommons-Regular.woff2' | asset_url }}) format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -40,7 +40,7 @@
 
   @font-face {
     font-family: 'TT Commons';
-    src: url('https://cdn.shopify.com/s/files/1/0441/1431/3365/t/94/assets/TTCommons-Medium.woff2') format('woff2');
+    src: url({{ 'TTCommons-Medium.woff2' | asset_url }}) format('woff2');
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -48,7 +48,7 @@
 
   @font-face {
     font-family: 'TT Commons';
-    src: url('https://cdn.shopify.com/s/files/1/0441/1431/3365/t/94/assets/TTCommons-DemiBold.woff2') format('woff2');
+    src: url({{ 'TTCommons-DemiBold.woff2' | asset_url }}) format('woff2');
     font-weight: 600;
     font-style: normal;
     font-display: swap;
@@ -56,7 +56,7 @@
 
   @font-face {
     font-family: 'TT Commons';
-    src: url('https://cdn.shopify.com/s/files/1/0441/1431/3365/t/94/assets/TTCommons-Bold.woff2') format('woff2');
+    src: url({{ 'TTCommons-Bold.woff2' | asset_url }}) format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -252,7 +252,7 @@
   }
 
   .comparison-section[data-section-id="{{ section.id }}"] .product-box.active .compare-item {
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 1);
   }
 
   .comparison-section[data-section-id="{{ section.id }}"] .compare-item + .compare-item {
@@ -791,21 +791,21 @@
           "settings": {
             "featured": true,
             "product_name": "Q-Rejuvalight Pro",
-            "features": "check: Quick - just 3 minutes | check: Customizable via Qure app | check: Wireless & battery-powered | check: 5 wavelengths | check: Mid-range - $399"
+            "features": "check: Quick - just 3 minutes | check: Customizable via Qure app | check: Wireless & battery-powered | check: 5 wavelengths | check: Mid-range - <strong>$399</strong>"
           }
         },
         {
           "type": "product_column",
           "settings": {
             "product_name": "Clear & Contour Masks",
-            "features": "cross: Slow - 10+ minutes | cross: One mode for full face | cross: Wired & corded controller | cross: 2 basic wavelengths | cross: Mid-range - $395"
+            "features": "cross: Slow - 10+ minutes | cross: One mode for full face | cross: Wired & corded controller | cross: 2 basic wavelengths | cross: Mid-range - <strong>$395</strong>"
           }
         },
         {
           "type": "product_column",
           "settings": {
             "product_name": "Spectrum Lite Face Wear",
-            "features": "check: Quick - 3 minutes | cross: Two treatment modes | cross: Wireless & cordfree | cross: 4 basic wavelengths | check: Premium - $455"
+            "features": "check: Quick - 3 minutes | cross: Two treatment modes | cross: Wireless & cordfree | cross: 4 basic wavelengths | check: Premium - <strong>$455</strong>"
           }
         }
       ]
