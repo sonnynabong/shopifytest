@@ -5,6 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Comparison Section - Exact Match</title>
     <style>
+        /* Font Imports - Exact from live site */
+        @font-face {
+            font-family: 'Canela';
+            src: url('https://qureskincaredns.com/assets/fonts/Canela/Canela-Light.woff2') format('woff2');
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Canela';
+            src: url('https://qureskincaredns.com/assets/fonts/Canela/Canela-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Canela';
+            src: url('https://qureskincaredns.com/assets/fonts/Canela/Canela-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'TT Commons';
+            src: url('https://qureskincaredns.com/assets/fonts/TTCommons/TTCommons-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'TT Commons';
+            src: url('https://qureskincaredns.com/assets/fonts/TTCommons/TTCommons-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'TT Commons';
+            src: url('https://qureskincaredns.com/assets/fonts/TTCommons/TTCommons-DemiBold.woff2') format('woff2');
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'TT Commons';
+            src: url('https://qureskincaredns.com/assets/fonts/TTCommons/TTCommons-Bold.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,7 +69,7 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'TT Commons', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #F6F6F7;
         }
 
@@ -32,10 +89,11 @@
             margin-bottom: 40px;
         }
 
+        /* Section Title - Canela Light 38px */
         .section-title {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-size: 36px;
-            font-weight: 400;
+            font-family: 'Canela', Georgia, serif;
+            font-size: 38px;
+            font-weight: 300;
             color: #1F2937;
         }
 
@@ -58,10 +116,12 @@
             border-radius: 10px 0px 0px 10px;
         }
 
+        /* Labels - TT Commons DemiBold 16px */
         .heading-item {
+            font-family: 'TT Commons', -apple-system, BlinkMacSystemFont, sans-serif;
             font-weight: 600;
             font-size: 16px;
-            height: calc(390px / 5); /* --cp__height / --item-count */
+            height: calc(390px / 5);
             display: flex;
             align-items: center;
             color: #1F2937;
@@ -90,11 +150,11 @@
         .product-box {
             flex: 0 0 33.333%;
             max-width: 33.333%;
-            padding-top: calc(277px / 2); /* --eq__height / 2 */
+            padding-top: calc(277px / 2);
         }
 
         .product-box.active .product-inner {
-            background: #D1FAE5; /* Mint green for featured */
+            background: #D1FAE5;
         }
 
         .product-box.active .product-inner::before {
@@ -102,7 +162,7 @@
             height: calc(100% + 25px);
             width: 100%;
             display: block;
-            background: #D1FAE5;
+            background: #C8E6DC;
             position: absolute;
             left: 0;
             right: 0;
@@ -166,12 +226,13 @@
             width: auto;
         }
 
+        /* Product Title - Canela Light 22px */
         .product-title {
+            font-family: 'Canela', Georgia, serif;
+            font-weight: 300;
+            font-size: 22px;
             text-align: center;
             margin-bottom: 15px;
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-size: 22px;
-            font-weight: 400;
             color: #1F2937;
         }
 
@@ -182,7 +243,11 @@
             z-index: 1;
         }
 
+        /* Feature Items - TT Commons Regular 18px */
         .compare-item {
+            font-family: 'TT Commons', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 400;
+            font-size: 18px;
             padding: 10px 12px 10px 40px;
             border-radius: 5px;
             background: #fff;
@@ -191,7 +256,6 @@
             min-height: 66px;
             display: flex;
             align-items: center;
-            font-size: 14px;
             color: #374151;
         }
 
@@ -203,7 +267,7 @@
             margin-top: 10px;
         }
 
-        /* Icons using inline SVG instead of Font Awesome */
+        /* Icons using inline SVG */
         .compare-item::before {
             position: absolute;
             left: 12px;
@@ -236,8 +300,10 @@
 
         /* Section footer */
         .section-footer {
-            text-align: center;
+            font-family: 'TT Commons', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 400;
             font-size: 12px;
+            text-align: center;
             color: #9CA3AF;
             margin-top: 40px;
         }
@@ -248,6 +314,7 @@
                 padding: 50px 0;
             }
 
+            /* Mobile Title - Canela Light 28px */
             .section-title {
                 font-size: 28px;
             }
@@ -261,6 +328,7 @@
                 padding: 0px 16px;
             }
 
+            /* Mobile Labels - TT Commons DemiBold 14px */
             .heading-item {
                 font-size: 14px;
                 line-height: 18px;
@@ -291,15 +359,17 @@
                 padding: 12px;
             }
 
+            /* Mobile Product Title - Canela Light 18px */
+            .product-title {
+                font-size: 18px;
+            }
+
+            /* Mobile Feature Items - TT Commons Regular 14px */
             .compare-item {
                 font-size: 14px;
                 line-height: 18px;
                 padding: 8px 12px 10px 40px;
                 min-height: 56px;
-            }
-
-            .product-title {
-                font-size: 18px;
             }
 
             /* Mobile slider navigation */
@@ -329,6 +399,7 @@
             }
 
             .mobile-indicator {
+                font-family: 'TT Commons', -apple-system, BlinkMacSystemFont, sans-serif;
                 font-size: 16px;
                 font-weight: 500;
                 color: #6B7280;
@@ -467,7 +538,7 @@
             const total = boxes.length;
 
             function updateSlider() {
-                if (window.innerWidth >= 768) return; // Only on mobile
+                if (window.innerWidth >= 768) return;
                 
                 const offset = -currentIndex * 100;
                 wrapper.style.transform = `translateX(${offset}%)`;
