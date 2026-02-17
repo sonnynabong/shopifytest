@@ -59,7 +59,7 @@
                                         <img src="assets/omnilux-mask.webp" alt="Omnilux" class="product-image">
                                     </div>
                                     <div class="brand-logo-wrapper">
-                                        <img src="assets/omnilux-logo.svg" alt="Omnilux" class="brand-logo">
+                                        <img src="assets/omnilux-logo.png" alt="Omnilux" class="brand-logo">
                                     </div>
                                     <h3 class="product-title">Clear & Contour Masks</h3>
                                 </div>
@@ -119,6 +119,7 @@
     </section>
 
     <script>
+        // Slider functionality - Desktop/Tablet/Mobile
         (function() {
             const wrapper = document.getElementById('productsWrapper');
             const boxes = wrapper.querySelectorAll('.product-box');
@@ -127,18 +128,43 @@
             const indicator = document.querySelector('.mobile-indicator');
             
             let currentIndex = 0;
-            const total = boxes.length;
+            const totalProducts = boxes.length;
+
+            function getSlidesPerView() {
+                const width = window.innerWidth;
+                if (width >= 1024) return 3; // Desktop: 3 products
+                if (width >= 768) return 2;  // Tablet: 2 products
+                return 1;                     // Mobile: 1 product
+            }
+
+            function getTotalSlides() {
+                const slidesPerView = getSlidesPerView();
+                if (slidesPerView >= totalProducts) return 1;
+                // For tablet with 3 products showing 2 at a time = 2 slides
+                return Math.ceil(totalProducts / slidesPerView);
+            }
 
             function updateSlider() {
-                if (window.innerWidth >= 768) return;
+                const width = window.innerWidth;
+                const slidesPerView = getSlidesPerView();
                 
-                const offset = -currentIndex * 100;
+                // Desktop: no slider
+                if (width >= 1024) {
+                    wrapper.style.transform = '';
+                    wrapper.style.transition = '';
+                    return;
+                }
+                
+                // Tablet/Mobile: slider
+                const slidePercentage = 100 / slidesPerView;
+                const offset = -currentIndex * slidePercentage;
                 wrapper.style.transform = `translateX(${offset}%)`;
                 wrapper.style.transition = 'transform 0.3s ease';
                 
-                indicator.textContent = `${currentIndex + 1} / ${total}`;
+                const totalSlides = getTotalSlides();
+                indicator.textContent = `${currentIndex + 1} / ${totalSlides}`;
                 prevBtn.disabled = currentIndex === 0;
-                nextBtn.disabled = currentIndex === total - 1;
+                nextBtn.disabled = currentIndex >= totalSlides - 1;
             }
 
             prevBtn.addEventListener('click', () => {
@@ -149,12 +175,14 @@
             });
 
             nextBtn.addEventListener('click', () => {
-                if (currentIndex < total - 1) {
+                const totalSlides = getTotalSlides();
+                if (currentIndex < totalSlides - 1) {
                     currentIndex++;
                     updateSlider();
                 }
             });
 
+            // Touch/Swipe support
             let touchStartX = 0;
             
             wrapper.addEventListener('touchstart', (e) => {
@@ -162,11 +190,13 @@
             }, { passive: true });
 
             wrapper.addEventListener('touchend', (e) => {
-                if (window.innerWidth >= 768) return;
+                if (window.innerWidth >= 1024) return;
                 
                 const diff = touchStartX - e.changedTouches[0].screenX;
+                const totalSlides = getTotalSlides();
+                
                 if (Math.abs(diff) > 50) {
-                    if (diff > 0 && currentIndex < total - 1) {
+                    if (diff > 0 && currentIndex < totalSlides - 1) {
                         currentIndex++;
                         updateSlider();
                     } else if (diff < 0 && currentIndex > 0) {
@@ -176,13 +206,14 @@
                 }
             }, { passive: true });
 
+            // Handle resize
             window.addEventListener('resize', () => {
-                if (window.innerWidth >= 768) {
-                    wrapper.style.transform = '';
-                    wrapper.style.transition = '';
-                } else {
-                    updateSlider();
+                // Reset index when switching between breakpoints
+                const width = window.innerWidth;
+                if (width >= 1024) {
+                    currentIndex = 0;
                 }
+                updateSlider();
             });
 
             updateSlider();
