@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Comparison Section - Exact Match</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #F6F6F7;
+        }
+
+        .comparison-section {
+            padding: 80px 0;
+            background-color: #F6F6F7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 36px;
+            font-weight: 400;
+            color: #1F2937;
+        }
+
+        /* Main comparison row layout */
+        .compare-row {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: flex-end;
+        }
+
+        /* Left side - Headings */
+        .compare-headings {
+            flex: 0 0 220px;
+            max-width: 220px;
+        }
+
+        .heading-box {
+            padding: 8px 32px;
+            background: #fff;
+            border-radius: 10px 0px 0px 10px;
+        }
+
+        .heading-item {
+            font-weight: 600;
+            font-size: 16px;
+            height: calc(390px / 5); /* --cp__height / --item-count */
+            display: flex;
+            align-items: center;
+            color: #1F2937;
+        }
+
+        .heading-item + .heading-item {
+            border-top: 1px solid #DFE0E0;
+        }
+
+        .heading-item.orange {
+            color: #F97316;
+        }
+
+        /* Right side - Products */
+        .compare-products {
+            flex: 0 0 calc(100% - 220px);
+            max-width: calc(100% - 220px);
+            overflow: hidden;
+        }
+
+        .products-wrapper {
+            display: flex;
+        }
+
+        /* Product box */
+        .product-box {
+            flex: 0 0 33.333%;
+            max-width: 33.333%;
+            padding-top: calc(277px / 2); /* --eq__height / 2 */
+        }
+
+        .product-box.active .product-inner {
+            background: #D1FAE5; /* Mint green for featured */
+        }
+
+        .product-box.active .product-inner::before {
+            content: '';
+            height: calc(100% + 25px);
+            width: 100%;
+            display: block;
+            background: #D1FAE5;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: -25px;
+            bottom: 0;
+            border-radius: 10px 10px 0 0;
+            z-index: 0;
+        }
+
+        .product-inner {
+            padding: 24px;
+            background: #fff;
+            position: relative;
+            height: 100%;
+            border-radius: 0;
+        }
+
+        .product-box:last-child .product-inner {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        /* Product header */
+        .product-header {
+            height: 277px !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            margin-top: calc(-1 * (277px / 2));
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-image-wrapper {
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            width: 100%;
+            padding-bottom: 10px;
+        }
+
+        .product-image {
+            height: 150px;
+            object-fit: contain;
+        }
+
+        .product-box.active .product-image {
+            height: 190px;
+        }
+
+        .brand-logo-wrapper {
+            z-index: 99999;
+            position: relative;
+            margin: 0 auto;
+            width: max-content;
+        }
+
+        .brand-logo {
+            height: 24px;
+            width: auto;
+        }
+
+        .product-title {
+            text-align: center;
+            margin-bottom: 15px;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 22px;
+            font-weight: 400;
+            color: #1F2937;
+        }
+
+        /* Product content */
+        .product-content {
+            position: relative;
+            padding-top: 20px;
+            z-index: 1;
+        }
+
+        .compare-item {
+            padding: 10px 12px 10px 40px;
+            border-radius: 5px;
+            background: #fff;
+            border: 1px solid #DFE0E0;
+            position: relative;
+            min-height: 66px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .product-box.active .compare-item {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .compare-item + .compare-item {
+            margin-top: 10px;
+        }
+
+        /* Icons using inline SVG instead of Font Awesome */
+        .compare-item::before {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .compare-check::before {
+            content: '';
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%238b8c8e' d='M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .product-box.active .compare-check::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23008763' d='M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z'/%3E%3C/svg%3E");
+        }
+
+        .compare-cross::before {
+            content: '';
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%238b8c8e' d='M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        /* Section footer */
+        .section-footer {
+            text-align: center;
+            font-size: 12px;
+            color: #9CA3AF;
+            margin-top: 40px;
+        }
+
+        /* Mobile styles */
+        @media (max-width: 767px) {
+            .comparison-section {
+                padding: 50px 0;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .compare-headings {
+                flex: 0 0 120px;
+                max-width: 120px;
+            }
+
+            .heading-box {
+                padding: 0px 16px;
+            }
+
+            .heading-item {
+                font-size: 14px;
+                line-height: 18px;
+                height: calc(300px / 5);
+            }
+
+            .compare-products {
+                flex: 0 0 calc(100% - 120px);
+                max-width: calc(100% - 120px);
+            }
+
+            .product-box {
+                flex: 0 0 100%;
+                max-width: 100%;
+                padding-top: calc(200px / 2);
+            }
+
+            .product-header {
+                height: 200px !important;
+                margin-top: calc(-1 * (200px / 2));
+            }
+
+            .product-image {
+                max-height: 120px;
+            }
+
+            .product-inner {
+                padding: 12px;
+            }
+
+            .compare-item {
+                font-size: 14px;
+                line-height: 18px;
+                padding: 8px 12px 10px 40px;
+                min-height: 56px;
+            }
+
+            .product-title {
+                font-size: 18px;
+            }
+
+            /* Mobile slider navigation */
+            .mobile-nav {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 20px;
+                margin-top: 24px;
+            }
+
+            .mobile-nav-btn {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                border: 1px solid #E5E7EB;
+                background: #fff;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .mobile-nav-btn:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
+
+            .mobile-indicator {
+                font-size: 16px;
+                font-weight: 500;
+                color: #6B7280;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .mobile-nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="comparison-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">How Q-Rejuvalight compares</h2>
+            </div>
+
+            <div class="compare-row">
+                <!-- Left: Headings -->
+                <div class="compare-headings">
+                    <div class="heading-box">
+                        <div class="heading-item">Treatment Time</div>
+                        <div class="heading-item">Customizable</div>
+                        <div class="heading-item">Cordless</div>
+                        <div class="heading-item orange">Wavelengths</div>
+                        <div class="heading-item">Cost</div>
+                    </div>
+                </div>
+
+                <!-- Right: Products -->
+                <div class="compare-products">
+                    <div class="products-wrapper" id="productsWrapper">
+                        
+                        <!-- Product 1: Qure (Featured/Active) -->
+                        <div class="product-box active">
+                            <div class="product-inner">
+                                <div class="product-header">
+                                    <div class="product-image-wrapper">
+                                        <img src="assets/qure-mask.webp" alt="Qure" class="product-image">
+                                    </div>
+                                    <div class="brand-logo-wrapper">
+                                        <img src="assets/qure-logo.svg" alt="Qure" class="brand-logo">
+                                    </div>
+                                    <h3 class="product-title">Q-Rejuvalight Pro</h3>
+                                </div>
+                                <div class="product-content">
+                                    <div class="compare-item compare-check">Quick - just 3 minutes</div>
+                                    <div class="compare-item compare-check">Customizable via Qure app</div>
+                                    <div class="compare-item compare-check">Wireless & battery-powered</div>
+                                    <div class="compare-item compare-check">5 wavelengths</div>
+                                    <div class="compare-item compare-check">Mid-range - <strong>$399</strong></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 2: Omnilux -->
+                        <div class="product-box">
+                            <div class="product-inner">
+                                <div class="product-header">
+                                    <div class="product-image-wrapper">
+                                        <img src="assets/omnilux-mask.webp" alt="Omnilux" class="product-image">
+                                    </div>
+                                    <div class="brand-logo-wrapper">
+                                        <img src="assets/omnilux-logo.svg" alt="Omnilux" class="brand-logo">
+                                    </div>
+                                    <h3 class="product-title">Clear & Contour Masks</h3>
+                                </div>
+                                <div class="product-content">
+                                    <div class="compare-item compare-cross">Slow - 10+ minutes</div>
+                                    <div class="compare-item compare-cross">One mode for full face</div>
+                                    <div class="compare-item compare-cross">Wired & corded controller</div>
+                                    <div class="compare-item compare-cross">2 basic wavelengths</div>
+                                    <div class="compare-item compare-cross">Mid-range - <strong>$395</strong></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product 3: Dr Dennis Gross -->
+                        <div class="product-box">
+                            <div class="product-inner">
+                                <div class="product-header">
+                                    <div class="product-image-wrapper">
+                                        <img src="assets/dr-dennis-mask.webp" alt="Dr Dennis Gross" class="product-image">
+                                    </div>
+                                    <div class="brand-logo-wrapper">
+                                        <img src="assets/dr-dennis-logo.svg" alt="Dr Dennis Gross" class="brand-logo">
+                                    </div>
+                                    <h3 class="product-title">Spectrum Lite Face Wear</h3>
+                                </div>
+                                <div class="product-content">
+                                    <div class="compare-item compare-check">Quick - 3 minutes</div>
+                                    <div class="compare-item compare-cross">Two treatment modes</div>
+                                    <div class="compare-item compare-cross">Wireless & cordfree</div>
+                                    <div class="compare-item compare-cross">4 basic wavelengths</div>
+                                    <div class="compare-item compare-check">Premium - <strong>$455</strong></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Navigation -->
+            <div class="mobile-nav">
+                <button class="mobile-nav-btn prev-btn" aria-label="Previous">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+                <span class="mobile-indicator">1 / 3</span>
+                <button class="mobile-nav-btn next-btn" aria-label="Next">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </button>
+            </div>
+
+            <p class="section-footer">Based on publicly available information. For general comparison only.</p>
+        </div>
+    </section>
+
+    <script>
+        // Mobile slider functionality
+        (function() {
+            const wrapper = document.getElementById('productsWrapper');
+            const boxes = wrapper.querySelectorAll('.product-box');
+            const prevBtn = document.querySelector('.prev-btn');
+            const nextBtn = document.querySelector('.next-btn');
+            const indicator = document.querySelector('.mobile-indicator');
+            
+            let currentIndex = 0;
+            const total = boxes.length;
+
+            function updateSlider() {
+                if (window.innerWidth >= 768) return; // Only on mobile
+                
+                const offset = -currentIndex * 100;
+                wrapper.style.transform = `translateX(${offset}%)`;
+                wrapper.style.transition = 'transform 0.3s ease';
+                
+                indicator.textContent = `${currentIndex + 1} / ${total}`;
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex === total - 1;
+            }
+
+            prevBtn.addEventListener('click', () => {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateSlider();
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentIndex < total - 1) {
+                    currentIndex++;
+                    updateSlider();
+                }
+            });
+
+            // Touch/Swipe support
+            let touchStartX = 0;
+            
+            wrapper.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            wrapper.addEventListener('touchend', (e) => {
+                if (window.innerWidth >= 768) return;
+                
+                const diff = touchStartX - e.changedTouches[0].screenX;
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0 && currentIndex < total - 1) {
+                        currentIndex++;
+                        updateSlider();
+                    } else if (diff < 0 && currentIndex > 0) {
+                        currentIndex--;
+                        updateSlider();
+                    }
+                }
+            }, { passive: true });
+
+            // Handle resize
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 768) {
+                    wrapper.style.transform = '';
+                    wrapper.style.transition = '';
+                } else {
+                    updateSlider();
+                }
+            });
+
+            updateSlider();
+        })();
+    </script>
+</body>
+</html>

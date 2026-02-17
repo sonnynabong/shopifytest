@@ -1,0 +1,283 @@
+{% comment %}
+  Product Comparison Section - Exact Match to Qure Live Site
+  Row-based flexbox layout with left headings and right products
+{% endcomment %}
+
+{{ 'comparison-section.css' | asset_url | stylesheet_tag }}
+
+<section class="comparison-section" data-section-id="{{ section.id }}" data-section-type="product-comparison">
+  <div class="container">
+    
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.title | default: "How Q-Rejuvalight compares" }}</h2>
+    </div>
+
+    <div class="compare-row">
+      
+      <!-- Left: Headings -->
+      <div class="compare-headings">
+        <div class="heading-box">
+          {% for block in section.blocks %}
+            {% if block.type == 'feature_row' %}
+              <div class="heading-item{% if block.settings.highlight %} orange{% endif %}" {{ block.shopify_attributes }}>
+                {{ block.settings.label }}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Right: Products -->
+      <div class="compare-products">
+        <div class="products-wrapper" id="productsWrapper-{{ section.id }}">
+          {% assign product_count = 0 %}
+          {% for product in section.blocks %}
+            {% if product.type == 'product_column' %}
+              
+              <div class="product-box{% if product.settings.featured %} active{% endif %}" data-slide="{{ product_count }}" {{ product.shopify_attributes }}>
+                <div class="product-inner">
+                  
+                  <div class="product-header">
+                    {% if product.settings.product_image != blank %}
+                      <div class="product-image-wrapper">
+                        <img src="{{ product.settings.product_image | img_url: 'master' }}" alt="{{ product.settings.product_name }}" class="product-image" loading="lazy">
+                      </div>
+                    {% endif %}
+                    
+                    {% if product.settings.brand_logo != blank %}
+                      <div class="brand-logo-wrapper">
+                        <img src="{{ product.settings.brand_logo | img_url: 'master' }}" alt="{{ product.settings.brand_name }}" class="brand-logo" loading="lazy">
+                      </div>
+                    {% endif %}
+                    
+                    <h3 class="product-title">{{ product.settings.product_name }}</h3>
+                  </div>
+                  
+                  <div class="product-content">
+                    {% assign features = product.settings.features | split: '|' %}
+                    {% for feature in features %}
+                      {% assign feature_parts = feature | split: ':' %}
+                      {% assign feature_type = feature_parts[0] | strip %}
+                      {% assign feature_text = feature_parts[1] | strip %}
+                      
+                      <div class="compare-item compare-{{ feature_type }}">{{ feature_text }}</div>
+                    {% endfor %}
+                  </div>
+                  
+                </div>
+              </div>
+              {% assign product_count = product_count | plus: 1 %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
+      <button class="mobile-nav-btn prev-btn" aria-label="Previous product">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+      <span class="mobile-indicator">1 / {{ product_count }}</span>
+      <button class="mobile-nav-btn next-btn" aria-label="Next product">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </button>
+    </div>
+
+    <p class="section-footer">{{ section.settings.footer_text | default: "Based on publicly available information. For general comparison only." }}</p>
+  </div>
+</section>
+
+<script>
+  (function() {
+    const wrapper = document.getElementById('productsWrapper-{{ section.id }}');
+    const boxes = wrapper.querySelectorAll('.product-box');
+    const prevBtn = document.querySelector('[data-section-id="{{ section.id }}"] .prev-btn');
+    const nextBtn = document.querySelector('[data-section-id="{{ section.id }}"] .next-btn');
+    const indicator = document.querySelector('[data-section-id="{{ section.id }}"] .mobile-indicator');
+    
+    let currentIndex = 0;
+    const total = boxes.length;
+
+    function updateSlider() {
+      if (window.innerWidth >= 768) return;
+      
+      const offset = -currentIndex * 100;
+      wrapper.style.transform = 'translateX(' + offset + '%)';
+      wrapper.style.transition = 'transform 0.3s ease';
+      
+      indicator.textContent = (currentIndex + 1) + ' / ' + total;
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex === total - 1;
+    }
+
+    prevBtn.addEventListener('click', function() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateSlider();
+      }
+    });
+
+    nextBtn.addEventListener('click', function() {
+      if (currentIndex < total - 1) {
+        currentIndex++;
+        updateSlider();
+      }
+    });
+
+    // Touch/Swipe support
+    let touchStartX = 0;
+    
+    wrapper.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    wrapper.addEventListener('touchend', function(e) {
+      if (window.innerWidth >= 768) return;
+      
+      const diff = touchStartX - e.changedTouches[0].screenX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0 && currentIndex < total - 1) {
+          currentIndex++;
+          updateSlider();
+        } else if (diff < 0 && currentIndex > 0) {
+          currentIndex--;
+          updateSlider();
+        }
+      }
+    }, { passive: true });
+
+    // Handle resize
+    window.addEventListener('resize', function() {
+      if (window.innerWidth >= 768) {
+        wrapper.style.transform = '';
+        wrapper.style.transition = '';
+      } else {
+        updateSlider();
+      }
+    });
+
+    updateSlider();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product Comparison",
+  "tag": "section",
+  "class": "product-comparison-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "How Q-Rejuvalight compares"
+    },
+    {
+      "type": "text",
+      "id": "footer_text",
+      "label": "Footer Text",
+      "default": "Based on publicly available information. For general comparison only."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature_row",
+      "name": "Feature Row Label",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Feature Name"
+        },
+        {
+          "type": "checkbox",
+          "id": "highlight",
+          "label": "Highlight in orange",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "product_column",
+      "name": "Product Column",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "featured",
+          "label": "Featured Product (Green Background)",
+          "default": false
+        },
+        {
+          "type": "image_picker",
+          "id": "product_image",
+          "label": "Product Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "brand_logo",
+          "label": "Brand Logo"
+        },
+        {
+          "type": "text",
+          "id": "brand_name",
+          "label": "Brand Name"
+        },
+        {
+          "type": "text",
+          "id": "product_name",
+          "label": "Product Name",
+          "default": "Product Name"
+        },
+        {
+          "type": "textarea",
+          "id": "features",
+          "label": "Features",
+          "info": "Enter features separated by |. Format: type: text where type is 'check' or 'cross' (e.g., check: Quick - just 3 minutes | cross: Slow - 10+ minutes)",
+          "default": "check: Quick - just 3 minutes | check: Customizable via Qure app | check: Wireless & battery-powered | check: 5 wavelengths | check: Mid-range - $399"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Comparison",
+      "blocks": {
+        "feature_row": [
+          { "settings": { "label": "Treatment Time" } },
+          { "settings": { "label": "Customizable" } },
+          { "settings": { "label": "Cordless" } },
+          { "settings": { "label": "Wavelengths", "highlight": true } },
+          { "settings": { "label": "Cost" } }
+        ],
+        "product_column": [
+          {
+            "settings": {
+              "featured": true,
+              "product_name": "Q-Rejuvalight Pro",
+              "features": "check: Quick - just 3 minutes | check: Customizable via Qure app | check: Wireless & battery-powered | check: 5 wavelengths | check: Mid-range - $399"
+            }
+          },
+          {
+            "settings": {
+              "product_name": "Clear & Contour Masks",
+              "features": "cross: Slow - 10+ minutes | cross: One mode for full face | cross: Wired & corded controller | cross: 2 basic wavelengths | cross: Mid-range - $395"
+            }
+          },
+          {
+            "settings": {
+              "product_name": "Spectrum Lite Face Wear",
+              "features": "check: Quick - 3 minutes | cross: Two treatment modes | cross: Wireless & cordfree | cross: 4 basic wavelengths | check: Premium - $455"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
+{% endschema %}
